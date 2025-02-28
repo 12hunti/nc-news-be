@@ -21,20 +21,35 @@ describe("seed", () => {
           expect(exists).toBe(true);
         });
     });
-    test("topics table has slug column as primary key", () => {
+    test("topics table has slug column as varying character", () => {
       return db
         .query(
-          `SELECT column_name, data_type, column_default
+          `SELECT *
                     FROM information_schema.columns
                     WHERE table_name = 'topics'
                     AND column_name = 'slug';`
         )
         .then(({ rows: [column] }) => {
+          console.log(column);
           expect(column.column_name).toBe("slug");
           expect(column.data_type).toBe("character varying");
         });
     });
-    test("topics table has description column", () => {
+    test("topics table has slug column as the primary key", () => {
+      return db
+        .query(
+          `SELECT column_name
+                    FROM information_schema.table_constraints AS tc
+                    JOIN information_schema.key_column_usage AS kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    WHERE tc.constraint_type = 'PRIMARY KEY'
+                    AND tc.table_name = 'topics';`
+        )
+        .then(({ rows: [{ column_name }] }) => {
+          expect(column_name).toBe("slug");
+        });
+    });
+    test("topics table has description column as varying character", () => {
       return db
         .query(
           `SELECT column_name, data_type, column_default
@@ -44,18 +59,21 @@ describe("seed", () => {
         )
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("description");
+          expect(column.data_type).toBe("character varying");
         });
     });
-    test("topics table has img_url column", () => {
+    test("topics table has img_url column of varying character of max length 1000", () => {
       return db
         .query(
-          `SELECT column_name
+          `SELECT column_name, data_type, character_maximum_length
                       FROM information_schema.columns
                       WHERE table_name = 'topics'
                       AND column_name = 'img_url';`
         )
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("img_url");
+          expect(column.data_type).toBe("character varying");
+          expect(column.character_maximum_length).toBe(1000);
         });
     });
   });
@@ -74,7 +92,7 @@ describe("seed", () => {
           expect(exists).toBe(true);
         });
     });
-    test("users table has username column as primary key", () => {
+    test("users table has username column of varying character", () => {
       return db
         .query(
           `SELECT column_name, data_type, column_default
@@ -85,6 +103,20 @@ describe("seed", () => {
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("username");
           expect(column.data_type).toBe("character varying");
+        });
+    });
+    test("users table has username column as the primary key", () => {
+      return db
+        .query(
+          `SELECT column_name
+                    FROM information_schema.table_constraints AS tc
+                    JOIN information_schema.key_column_usage AS kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    WHERE tc.constraint_type = 'PRIMARY KEY'
+                    AND tc.table_name = 'users';`
+        )
+        .then(({ rows: [{ column_name }] }) => {
+          expect(column_name).toBe("username");
         });
     });
     test("users table has name column as varying character", () => {
@@ -100,16 +132,17 @@ describe("seed", () => {
           expect(column.data_type).toBe("character varying");
         });
     });
-    test("users table has avatar_url column", () => {
+    test("users table has avatar_url column of varying character of max length 1000", () => {
       return db
         .query(
-          `SELECT column_name
+          `SELECT column_name, character_maximum_length
                         FROM information_schema.columns
                         WHERE table_name = 'users'
                         AND column_name = 'avatar_url';`
         )
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("avatar_url");
+          expect(column.character_maximum_length).toBe(1000);
         });
     });
   });
@@ -129,7 +162,7 @@ describe("seed", () => {
           expect(exists).toBe(true);
         });
     });
-    test("articles table has article_id column as serial primary key", () => {
+    test("articles table has article_id column as a serial", () => {
       return db
         .query(
           `SELECT column_name, data_type, column_default
@@ -143,6 +176,20 @@ describe("seed", () => {
           expect(column.column_default).toBe(
             "nextval('articles_article_id_seq'::regclass)"
           );
+        });
+    });
+    test("articles table has article_id column as the primary key", () => {
+      return db
+        .query(
+          `SELECT column_name
+                    FROM information_schema.table_constraints AS tc
+                    JOIN information_schema.key_column_usage AS kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    WHERE tc.constraint_type = 'PRIMARY KEY'
+                    AND tc.table_name = 'articles';`
+        )
+        .then(({ rows: [{ column_name }] }) => {
+          expect(column_name).toBe("article_id");
         });
     });
     test("articles table has title column as varying character", () => {
@@ -184,17 +231,17 @@ describe("seed", () => {
           expect(column.data_type).toBe("character varying");
         });
     });
-    test("articles table has body column as varying character", () => {
+    test("articles table has body column as text", () => {
       return db
         .query(
-          `SELECT column_name, data_type
+          `SELECT column_name, data_type, character_maximum_length
                           FROM information_schema.columns
                           WHERE table_name = 'articles'
                           AND column_name = 'body';`
         )
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("body");
-          expect(column.data_type).toBe("character varying");
+          expect(column.data_type).toBe("text");
         });
     });
     test("articles table has created_at column as timestamp", () => {
@@ -223,10 +270,10 @@ describe("seed", () => {
           expect(column.data_type).toBe("integer");
         });
     });
-    test("articles table has article_img_url column as character varying", () => {
+    test("articles table has article_img_url column of varying character of max length 1000", () => {
       return db
         .query(
-          `SELECT column_name, data_type
+          `SELECT column_name, data_type, character_maximum_length
                           FROM information_schema.columns
                           WHERE table_name = 'articles'
                           AND column_name = 'article_img_url';`
@@ -234,6 +281,7 @@ describe("seed", () => {
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("article_img_url");
           expect(column.data_type).toBe("character varying");
+          expect(column.character_maximum_length).toBe(1000);
         });
     });
   });
@@ -253,7 +301,7 @@ describe("seed", () => {
           expect(exists).toBe(true);
         });
     });
-    test("comments table has comment_id column as serial primary key", () => {
+    test("comments table has comment_id column as serial", () => {
       return db
         .query(
           `SELECT column_name, data_type, column_default
@@ -269,7 +317,21 @@ describe("seed", () => {
           );
         });
     });
-    test("comments table has body column as varying character", () => {
+    test("comments table has comment_id column as the primary key", () => {
+      return db
+        .query(
+          `SELECT column_name
+                    FROM information_schema.table_constraints AS tc
+                    JOIN information_schema.key_column_usage AS kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    WHERE tc.constraint_type = 'PRIMARY KEY'
+                    AND tc.table_name = 'comments';`
+        )
+        .then(({ rows: [{ column_name }] }) => {
+          expect(column_name).toBe("comment_id");
+        });
+    });
+    test("comments table has body column as text", () => {
       return db
         .query(
           `SELECT column_name, data_type
@@ -279,7 +341,7 @@ describe("seed", () => {
         )
         .then(({ rows: [column] }) => {
           expect(column.column_name).toBe("body");
-          expect(column.data_type).toBe("character varying");
+          expect(column.data_type).toBe("text");
         });
     });
     test("comments table has article_id column as integer", () => {
