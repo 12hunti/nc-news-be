@@ -83,7 +83,24 @@ describe("formatTopics", () => {
     ];
     expect(formatTopics(topicsInput)).toEqual(returnValue);
   });
-  test.todo("does not mutate the input");
+  test("does not mutate the input", () => {
+    const topicsInput = [
+      {
+        description: "The man, the Mitch, the legend",
+        slug: "mitch",
+        img_url: "",
+      },
+    ];
+    const expectedTopicsValue = [
+      {
+        description: "The man, the Mitch, the legend",
+        slug: "mitch",
+        img_url: "",
+      },
+    ];
+    formatTopics(topicsInput);
+    expect(topicsInput).toEqual(expectedTopicsValue);
+  });
 });
 
 describe("formatUsers", () => {
@@ -148,7 +165,26 @@ describe("formatUsers", () => {
     ];
     expect(formatUsers(usersInput)).toEqual(returnValue);
   });
-  test.todo("does not mutate the input");
+  test("does not mutate the input", () => {
+    const usersInput = [
+      {
+        username: "butter_bridge",
+        name: "jonny",
+        avatar_url:
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+      },
+    ];
+    const expectedUsersValue = [
+      {
+        username: "butter_bridge",
+        name: "jonny",
+        avatar_url:
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+      },
+    ];
+    formatUsers(usersInput);
+    expect(usersInput).toEqual(expectedUsersValue);
+  });
 });
 
 describe("formatArticles", () => {
@@ -243,17 +279,9 @@ describe("formatArticles", () => {
     ];
     expect(formatArticles(articlesInput)).toEqual(returnValue);
   });
-  test.todo("does not mutate the input");
-});
-
-xdescribe("createCommentLookup", () => {
-  test("when passed an empty array, returns an empty object", () => {
-    expect(createArticleLookup([])).toEqual({});
-  });
-  test("when passed an array containing one article object, returns an object containing the article title and article_id linked", () => {
+  test("does not mutate the input", () => {
     const articleInput = [
       {
-        article_id: 1, //if not included fails... how to fix
         title: "Living in the shadow of a great man",
         topic: "mitch",
         author: "butter_bridge",
@@ -264,11 +292,7 @@ xdescribe("createCommentLookup", () => {
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       },
     ];
-    const returnValue = { 'Living in the shadow of a great man': 1 };
-    expect(createArticleLookup(articleInput)).toEqual(returnValue);
-  });
-  test("when passed multiple article objects, returns the article titles and article_ids all linked", () => {
-    const articleInput = [
+    const expectedArticleValue = [
       {
         title: "Living in the shadow of a great man",
         topic: "mitch",
@@ -279,7 +303,48 @@ xdescribe("createCommentLookup", () => {
         article_img_url:
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       },
+    ];
+    formatArticles(articleInput);
+    expect(articleInput).toEqual(expectedArticleValue);
+  });
+});
+
+describe("createArticleLookup", () => {
+  test("when passed an empty array, returns an empty object", () => {
+    expect(createArticleLookup([])).toEqual({});
+  });
+  test("when passed an array containing one article object, returns an object containing the article title and article_id linked", () => {
+    const articleInput = [
       {
+        article_id: 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: 1594329060000,
+        votes: 100,
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      },
+    ];
+    const returnValue = { "Living in the shadow of a great man": 1 };
+    expect(createArticleLookup(articleInput)).toEqual(returnValue);
+  });
+  test("when passed multiple article objects, returns the article titles and article_ids all linked", () => {
+    const articleInput = [
+      {
+        article_id: 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: 1594329060000,
+        votes: 100,
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      },
+      {
+        article_id: 2,
         title: "Sony Vaio; or, The Laptop",
         topic: "mitch",
         author: "icellusedkars",
@@ -300,9 +365,9 @@ xdescribe("createCommentLookup", () => {
       },
     ];
     const returnValue = {
-      'Living in the shadow of a great man': 1,
-      'Sony Vaio; or, The Laptop': 2,
-      'Eight pug gifs that remind me of mitch': 3
+      "Living in the shadow of a great man": 1,
+      "Sony Vaio; or, The Laptop": 2,
+      "Eight pug gifs that remind me of mitch": 3,
     };
     expect(createArticleLookup(articleInput)).toEqual(returnValue);
   });
@@ -338,7 +403,7 @@ xdescribe("createCommentLookup", () => {
   });
 });
 
-xdescribe("formatComments", () => {
+describe("formatComments", () => {
   test("when passed an two empty arrays returns an empty array", () => {
     expect(formatComments([], [])).toEqual([]);
   });
@@ -354,6 +419,7 @@ xdescribe("formatComments", () => {
     ];
     const articleInput = [
       {
+        article_id: 1,
         title: "They're not exactly dogs, are they?",
         topic: "mitch",
         author: "butter_bridge",
@@ -366,9 +432,9 @@ xdescribe("formatComments", () => {
     const returnValue = [
       [
         1,
-        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!", 
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
         16,
-       "butter_bridge",
+        "butter_bridge",
         new Date(1586179020000),
       ],
     ];
@@ -393,6 +459,7 @@ xdescribe("formatComments", () => {
     ];
     const articleInput = [
       {
+        article_id: 1,
         title: "Living in the shadow of a great man",
         topic: "mitch",
         author: "butter_bridge",
@@ -403,6 +470,7 @@ xdescribe("formatComments", () => {
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       },
       {
+        article_id: 2,
         title: "Eight pug gifs that remind me of mitch",
         topic: "mitch",
         author: "icellusedkars",
