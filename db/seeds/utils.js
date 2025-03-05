@@ -1,26 +1,26 @@
 const db = require("../../db/connection");
 const { userData, articleData, commentData } = require("../data/test-data");
 
-exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
+const convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
   return { created_at: new Date(created_at), ...otherProperties };
 };
 
-exports.formatTopics = (topicData) => {
+const formatTopics = (topicData) => {
   return topicData.map((topic) => {
     return [topic.description, topic.slug, topic.img_url];
   });
 };
 
-exports.formatUsers = (userData) => {
+const formatUsers = (userData) => {
   return userData.map((user) => {
     return [user.username, user.name, user.avatar_url];
   });
 };
 
-exports.formatArticles = (articleData) => {
+const formatArticles = (articleData) => {
   return articleData.map((article) => {
-    const updatedArticle = this.convertTimestampToDate(article);
+    const updatedArticle = convertTimestampToDate(article);
     return [
       updatedArticle.title,
       updatedArticle.topic,
@@ -33,7 +33,7 @@ exports.formatArticles = (articleData) => {
   });
 };
 
-exports.createArticleLookup = (insertedArticles) => {
+const createArticleLookup = (insertedArticles) => {
   if (insertedArticles.length === 0) {
     return {};
   }
@@ -41,31 +41,28 @@ exports.createArticleLookup = (insertedArticles) => {
   insertedArticles.forEach((article) => {
     articleLookup[article.title] = article.article_id;
   });
-  console.log('articleLookup:', articleLookup) //format comments tests id undefined
   return articleLookup;
 };
 
-exports.formatComments = (commentData, insertArticles) => {
-   const articleLookup = this.createArticleLookup(insertArticles);
-  console.log('articleLookup in formatComments:', articleLookup) // returning id undefined
+const formatComments = (commentData, insertArticles) => {
+  const articleLookup = createArticleLookup(insertArticles);
+
   if (commentData.length === 0) {
     return [];
   }
   const rearrangedComments = [];
 
   commentData.forEach((comment) => {
-    console.log('Looking up article_id for comment:', comment.article_title) //working 
     const formatComment = {
       ...comment,
       article_id: articleLookup[comment.article_title],
     };
-    console.log('Mapped article_id:', formatComment.article_id) //undefined
     delete formatComment.article_title;
     rearrangedComments.push(formatComment);
   });
-  
+
   const formattedComments = rearrangedComments.map((comment) => {
-    const updatedComment = this.convertTimestampToDate(comment);
+    const updatedComment = convertTimestampToDate(comment);
     return [
       updatedComment.article_id,
       updatedComment.body,
@@ -73,12 +70,16 @@ exports.formatComments = (commentData, insertArticles) => {
       updatedComment.author,
       updatedComment.created_at,
     ];
-  })
+  });
 
   return formattedComments;
 };
 
-
-
-
-  
+module.exports = {
+  convertTimestampToDate,
+  formatTopics,
+  formatUsers,
+  formatArticles,
+  formatComments,
+  createArticleLookup
+};
