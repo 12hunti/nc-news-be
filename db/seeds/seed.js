@@ -5,9 +5,8 @@ const {
   formatUsers,
   formatArticles,
   formatComments,
-  convertTimestampToDate,
 } = require("./utils");
-const articles = require("../data/test-data/articles");
+
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -57,38 +56,14 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
       return db.query(insertArticles);
     })
-    .then(({ rows }) => {
-      const articlesRef = {};
-      rows.forEach((article) => {
-        articlesRef[article.title] = article.article_id;
-      });
-      const newComments = [];
-      commentData.forEach((comment) => {
-        const newComment = {
-          ...comment,
-          article_id: articlesRef[comment.article_title],
-        };
-        delete newComment.article_title;
-        newComments.push(newComment);
-      });
-      return newComments;
-    })
-    .then((newComments) => {
-      const formattedComments = newComments.map((comment) => {
-        const updatedComment = convertTimestampToDate(comment)
-      return[
-        updatedComment.article_id,
-        updatedComment.body,
-        updatedComment.votes,
-        updatedComment.author,
-        updatedComment.created_at,
-      ]});
+    .then(({rows}) => {
+      const formattedCommentsData = formatComments(commentData, rows);
       const insertComments = format(
-        `INSERT INTO comments (article_id, body, votes, author, created_at) VALUES %L RETURNING *`,
-        formattedComments
-      );
-      return db.query(insertComments);
-    });
+        `INSERT INTO comments (article_id, body, votes, author, created_at) VALUES %L RETURNING *`, formattedCommentsData
+      )
+      return db.query(insertComments)
+    })
+
 };
 
 function createTopics() {
