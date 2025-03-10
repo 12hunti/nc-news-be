@@ -148,17 +148,26 @@ describe("GET /api/articles/:article_id/comments", () => {
       const {comments} = body
       expect(comments.length).toBe(2)
       comments.forEach((comment) => {
-        const {comment_id, votes, created_at, author, body, article_id} = comment
-      expect(typeof comment_id).toBe("number")
-      expect(typeof votes).toBe("number")
-      expect(typeof created_at).toBe("string")
-      expect(typeof author).toBe("string")
-      expect(typeof body).toBe("string")
-      expect(article_id).toBe(3)
+        expect(comment).toMatchObject({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: 3
+        });
       })
     })
   })
-  test.todo("responds with the comments sorted with the most recent first")
+  test("responds with the comments sorted with the most recent first", () => {
+    return request(app)
+    .get("/api/articles/3/comments")
+    .then(({body}) => {
+      const {comments} = body
+      expect(comments).toBeSortedBy('created_at', { descending: true})
+    })
+  })
+  
   test.todo("404: responds with an error if the article_id does not exist")
   test.todo("400: responds with an error if the article_id is invalid")
 })
