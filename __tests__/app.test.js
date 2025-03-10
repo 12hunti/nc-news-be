@@ -31,12 +31,22 @@ describe("GET /api/topics", () => {
     .get("/api/topics")
     .expect(200)
     .then(({body}) => {
-      console.log(body)
       expect(body.topics.length).toBe(3)
     })
   })
-  test.todo("responds with the topics objects with each topic containing the correct properties")
+  test("responds with the topics objects with each topic containing the correct properties", () => {
+    return request(app)
+    .get("/api/topics")
+    .then(({body}) => {
+      const topics = body.topics
+      topics.forEach((topic) => {
+        const {slug, description, img_url} = topic
+        expect(typeof slug).toBe("string")
+        expect(typeof description).toBe("string")
+        expect(typeof img_url).toBe("string")
+      })
+    })
+  })
   test.todo("404: responds with an error if the topic does not exist")
   test.todo("400: responds with an error if the topic is not valid")
 })
-
