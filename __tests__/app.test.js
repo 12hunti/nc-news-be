@@ -85,6 +85,15 @@ describe("GET /api/articles", () => {
       expect(articles).toBeSortedBy('created_at', { descending: true})
     })
   })
+  test("returns the articles object without a body property present on any of the article objects", () => {
+    return request(app)
+    .get("/api/articles")
+    .then(({body}) =>{
+      body.articles.forEach((article)=>{
+        expect(article.body).not.toBe(true)
+      })
+    })
+  })
 })
 
 describe("GET /api/articles/:article_id", () => {
