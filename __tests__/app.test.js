@@ -93,5 +93,12 @@ describe("GET /api/articles/:article_id", () => {
       expect(body.msg).toBe("article_id not found")
     })
   });
-  test.todo("400: responds with an error if the article_id is invalid");
+  test("400: responds with an error if the article_id is invalid", () => {
+    return request(app)
+    .get("/api/articles/banana")
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe("bad request")
+    })
+  });
 });
