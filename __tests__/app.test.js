@@ -47,6 +47,12 @@ describe("GET /api/topics", () => {
       })
     })
   })
-  test.todo("404: responds with an error if the topic does not exist")
-  test.todo("400: responds with an error if the topic is not valid")
+  test("404: responds with an error if the topic does not exist", () => {
+    return request(app)
+    .get("/api/doesntexist")
+    .expect(404)
+    .then(({body}) => {
+      expect(body.msg).toBe('path not found')
+    })
+  })
 })
