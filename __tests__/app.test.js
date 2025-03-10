@@ -49,7 +49,7 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe("invalid path request", ()=>{
+describe("invalid path request", () => {
   test("404: responds with an error if the path does not exist", () => {
     return request(app)
       .get("/api/doesntexist")
@@ -58,7 +58,7 @@ describe("invalid path request", ()=>{
         expect(body.msg).toBe("path not found");
       });
   });
-})
+});
 
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with the article object from the request id", () => {
@@ -83,8 +83,15 @@ describe("GET /api/articles/:article_id", () => {
         expect(typeof created_at).toBe("string");
         expect(typeof votes).toBe("number");
         expect(typeof article_img_url).toBe("string");
-       });
+      });
   });
-  test.todo("404: responds with an error if the article_id does not exist");
+  test("404: responds with an error if the article_id does not exist", () => {
+    return request(app)
+    .get("/api/articles/7893")
+    .expect(404)
+    .then(({body}) => {
+      expect(body.msg).toBe("article_id not found")
+    })
+  });
   test.todo("400: responds with an error if the article_id is invalid");
-})
+});
