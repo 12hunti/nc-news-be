@@ -46,7 +46,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "desciption" : "serves an array of comments for the given article_id",
-    "queries" : [],
+    "queries" : ["author", "sort_by", "order" ],
     "exampleResponse": {
       "comment" :[
         {
@@ -57,6 +57,19 @@
           "created_at": 1602433380000
         }
       ]
+    }
+  },
+  "POST /api/articles/:article_id/comments":{
+    "desciption" : "adds a comment to an article for the given article_id, the author and body are required",
+    "queries": ["author"],
+    "exampleResponse": {
+      "newComment" : [{
+        "article_title": "UNCOVERED: catspiracy to bring down democracy",
+        "body": "I am 100% sure that we're not completely sure.",
+        "votes": 1,
+        "author": "butter_bridge",
+        "created_at": 1606176480000
+      }]
     }
   }
 }
