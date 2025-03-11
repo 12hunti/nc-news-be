@@ -18,7 +18,13 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.insertCommentsByArticleId = (author, body, article_id) => {
-
+  //check if author and body are valid data types
+  if (typeof author !== "string" || typeof body !== "string") {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+    });
+  }
   //check if any unwanted fields
   const validFields = ["author", "body"];
   const receivedFields = Object.keys({ author, body });
