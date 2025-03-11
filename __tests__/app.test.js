@@ -241,6 +241,22 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("bad request");
       });
   });
+  test("404: responds with an error if the article_id does not exist", () => {
+    return request(app)
+      .get("/api/articles/7893/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("resource not found");
+      });
+  });
+  test("400: responds with an error if the article_id is invalid", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
 });
 
 describe("PATCH /api/articles/:article_id", () => {
@@ -303,6 +319,22 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({
         votes:["add 5 votes"],
       })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("404: responds with an error if the article_id does not exist", () => {
+    return request(app)
+      .get("/api/articles/7893")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("article_id not found");
+      });
+  });
+  test("400: responds with an error if the article_id is invalid", () => {
+    return request(app)
+      .get("/api/articles/banana")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
