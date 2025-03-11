@@ -12,6 +12,7 @@ const {
   postCommentsByArticleId,
   deleteCommentByCommentId,
 } = require("./controllers/comments.controller");
+const {getUsers} = require("./controllers/users.controller")
 const {
   handlePsqlErrors,
   handleCustomErrors,
@@ -35,6 +36,8 @@ app.post("/api/articles/:article_id/comments", postCommentsByArticleId);
 app.patch("/api/articles/:article_id", patchArticleById);
 
 app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
+
+app.get("/api/users", getUsers)
 
 app.all("*", (request, response) => {
   response.status(404).send({ msg: "path not found" });

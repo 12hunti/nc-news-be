@@ -389,6 +389,24 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 })
 
+describe("GET /api/users", () => {
+  test("200: responds with the users object with with user containing the correct properties", () => {
+    return request(app)
+      .get("/api/users")
+      .then(({ body }) => {
+        expect(body.users.length).toBe(4);
+        body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+            
+          });
+        });
+      });
+  });
+})
+
 describe("invalid path request", () => {
   test("404: responds with an error if the path does not exist", () => {
     return request(app)
