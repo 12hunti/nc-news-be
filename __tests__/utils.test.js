@@ -5,7 +5,14 @@ const {
   formatArticles,
   formatComments,
   createArticleLookup,
+  checkExists,
 } = require("../db/seeds/utils");
+
+const db = require("../db/connection")
+
+afterAll(async() => {
+  await db.end()
+})
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -531,5 +538,21 @@ describe("formatComments", () => {
     ];
     formatComments(commentsInput, articleInput);
     expect(commentsInput).toEqual(expectedComments);
+  });
+});
+
+describe("checkExists", () => {
+  test("function resolves with true if resource exists", async () => {
+    const res = await checkExists("comments", "article_id", 3);
+    expect(res).toBe(true);
+  });
+
+  test("function rejects if resource doesn't exist", async () => {
+    try {
+      await checkExists("comments", "article_id", 9337);
+    } catch (res) {
+      expect(res.status).toBe(404);
+      expect(res.msg).toBe("resource not found");
+    }
   });
 });

@@ -156,13 +156,22 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(comments).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test("200: responds with an empty array when there are no comments associated with the article", () => {
+    return request(app)
+    .get("/api/articles/4/comments")
+    .expect(200)
+    .then(({body}) => {
+      const {comments} = body
+      expect(comments).toEqual([])
+    })
+  })
 
   test("404: responds with an error if the article_id does not exist", () => {
     return request(app)
     .get("/api/articles/7893/comments")
     .expect(404)
     .then(({ body }) => {
-      expect(body.msg).toBe("article_id not found");
+      expect(body.msg).toBe("resource not found");
     });
   });
   test("400: responds with an error if the article_id is invalid", () => {
