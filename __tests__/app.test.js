@@ -217,8 +217,19 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("author not found");
       });
   });
-  test.todo("400: responds with an error if sent a body with incorrect fields");
-  test.todo("400: responds with an error if send an invalid value for a field");
+  test("400: responds with an error if sent a body with incorrect fields", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({
+        votes: 5,
+        topic: "topic",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+ 
 });
 
 describe("invalid path request", () => {

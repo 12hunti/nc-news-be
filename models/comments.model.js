@@ -18,15 +18,32 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.insertCommentsByArticleId = (author, body, article_id) => {
+
+  //check if any unwanted fields
+  const validFields = ["author", "body"];
+  const receivedFields = Object.keys({ author, body });
+  const invalidFields = receivedFields.filter(
+    (field) => !validFields.includes(field)
+  );
+
+  if (invalidFields.length > 0) {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+    });
+  }
+//main query
   return db
-    .query(`SELECT * FROM users WHERE username = $1`, [author]).then(({rows}) => {
-        if(!rows[0]){
-            return Promise.reject({
-                status: 404,
-                msg: "author not found"
-            })
-        }
-        return rows
+    .query(`SELECT * FROM users WHERE username = $1`, [author])
+    .then(({ rows }) => {
+        //check if author exists
+      if (!rows[0]) {
+        return Promise.reject({
+          status: 404,
+          msg: "author not found",
+        });
+      }
+      return rows;
     })
     .then(() => {
       return db.query(
