@@ -115,7 +115,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/7893")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("article_id not found");
+        expect(body.msg).toBe("resource not found");
       });
   });
   test("400: responds with an error if the article_id is invalid", () => {
@@ -349,7 +349,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .get("/api/articles/7893")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("article_id not found");
+        expect(body.msg).toBe("resource not found");
       });
   });
   test("400: responds with an error if the article_id is invalid", () => {
