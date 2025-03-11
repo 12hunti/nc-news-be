@@ -38,11 +38,11 @@ exports.insertCommentsByArticleId = (author, body, article_id) => {
       msg: "bad request",
     });
   }
-//main query
+  //main query
   return db
     .query(`SELECT * FROM users WHERE username = $1`, [author])
     .then(({ rows }) => {
-        //check if author exists
+      //check if author exists
       if (!rows[0]) {
         return Promise.reject({
           status: 404,
@@ -59,5 +59,18 @@ exports.insertCommentsByArticleId = (author, body, article_id) => {
     })
     .then(({ rows }) => {
       return rows[0];
+    });
+};
+
+exports.removeCommentsbyCommentId = (comment_id) => {
+  return checkExists("comments", "comment_id", comment_id)
+    .then(() => {
+      return db.query(
+        `DELETE FROM comments WHERE comment_id = $1 RETURNING *`,
+        [comment_id]
+      );
+    })
+    .then(({ rows }) => {
+      return rows;
     });
 };
