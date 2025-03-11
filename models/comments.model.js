@@ -19,7 +19,15 @@ exports.fetchCommentsByArticleId = (article_id) => {
 
 exports.insertCommentsByArticleId = (author, body, article_id) => {
   return db
-    .query(`SELECT * FROM users WHERE username = $1`, [author])
+    .query(`SELECT * FROM users WHERE username = $1`, [author]).then(({rows}) => {
+        if(!rows[0]){
+            return Promise.reject({
+                status: 404,
+                msg: "author not found"
+            })
+        }
+        return rows
+    })
     .then(() => {
       return db.query(
         `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,

@@ -184,7 +184,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   test("201: creates a new comment object and inserts the comment into the database, responding with the inserted comment", () => {
     return request(app)
       .post("/api/articles/4/comments")
@@ -194,7 +194,6 @@ describe.only("POST /api/articles/:article_id/comments", () => {
       })
       .expect(201)
       .then(({ body }) => {
-        console.log(body, "body in test")
         const { newComment } = body;
         expect(newComment).toMatchObject({
           comment_id: expect.any(Number),
@@ -206,7 +205,20 @@ describe.only("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test.todo("errors");
+  test("404: responds with an error if an author doesn't exist", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({
+        author: "notauser",
+        body: "test comment",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("author not found");
+      });
+  });
+  test.todo("400: responds with an error if sent a body with incorrect fields");
+  test.todo("400: responds with an error if send an invalid value for a field");
 });
 
 describe("invalid path request", () => {
