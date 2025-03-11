@@ -43,8 +43,8 @@ describe("GET /api/topics", () => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
             description: expect.any(String),
-            img_url: expect.any(String)
-          })
+            img_url: expect.any(String),
+          });
         });
       });
   });
@@ -65,12 +65,12 @@ describe("GET /api/articles", () => {
             body: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
-            article_img_url: expect.any(String)
-          })
+            article_img_url: expect.any(String),
+          });
         });
       });
   });
-  
+
   test("responds with the articles sorted by date in descending order", () => {
     return request(app)
       .get("/api/articles")
@@ -96,7 +96,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/2")
       .expect(200)
       .then(({ body }) => {
-      const {article} = body
+        const { article } = body;
         expect(article).toMatchObject({
           article_id: 2,
           title: expect.any(String),
@@ -105,8 +105,8 @@ describe("GET /api/articles/:article_id", () => {
           body: expect.any(String),
           created_at: expect.any(String),
           votes: expect.any(Number),
-          article_img_url: expect.any(String)
-        })
+          article_img_url: expect.any(String),
+        });
       });
   });
 
@@ -158,21 +158,21 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
   test("200: responds with an empty array when there are no comments associated with the article", () => {
     return request(app)
-    .get("/api/articles/4/comments")
-    .expect(200)
-    .then(({body}) => {
-      const {comments} = body
-      expect(comments).toEqual([])
-    })
-  })
+      .get("/api/articles/4/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toEqual([]);
+      });
+  });
 
   test("404: responds with an error if the article_id does not exist", () => {
     return request(app)
-    .get("/api/articles/7893/comments")
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.msg).toBe("resource not found");
-    });
+      .get("/api/articles/7893/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("resource not found");
+      });
   });
   test("400: responds with an error if the article_id is invalid", () => {
     return request(app)
@@ -182,6 +182,31 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("bad request");
       });
   });
+});
+
+describe.only("POST /api/articles/:article_id/comments", () => {
+  test("201: creates a new comment object and inserts the comment into the database, responding with the inserted comment", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({
+        author: "butter_bridge",
+        body: "test comment",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        console.log(body, "body in test")
+        const { newComment } = body;
+        expect(newComment).toMatchObject({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: "butter_bridge",
+          body: "test comment",
+          article_id: 4,
+        });
+      });
+  });
+  test.todo("errors");
 });
 
 describe("invalid path request", () => {
