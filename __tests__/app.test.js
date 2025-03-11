@@ -265,8 +265,28 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
-  test.todo(
-    "200: resonds with the article object votes property updated when votes are subtracted"
+  test(
+    "200: resonds with the article object votes property updated when votes are subtracted", () => {
+      return request(app)
+      .patch("/api/articles/1")
+      .send({
+        inc_votes: -50,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 50,
+          article_img_url: expect.any(String),
+        });
+      });
+    }
   );
   test.todo("errors");
   //errors - invalid data type e.g. update with a string
