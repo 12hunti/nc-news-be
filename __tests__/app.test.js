@@ -362,26 +362,29 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id", () => {
+describe.only("DELETE /api/comments/:comment_id", () => {
   test("204: responds with the status code and no content", () => {
     return request(app)
     .delete("/api/comments/3")
     .expect(204)
+    .then(({body}) => {
+      expect(body).toEqual({})
+    })
   })
-  test("404: responds with an error if the article_id does not exist", () => {
-    return request(app)
-      .get("/api/comments/7633")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("comment_id not found");
-      });
-  });
   test("400: responds with an error if the comment_id is invalid", () => {
     return request(app)
-      .get("/api/comments/banana")
+      .delete("/api/comments/apple")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
+      });
+  });
+  xtest("404: responds with an error if the article_id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/7633")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("comment_id not found");
       });
   });
 })

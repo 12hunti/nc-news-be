@@ -28,8 +28,12 @@ exports.postCommentsByArticleId = (request, response, next) => {
 };
 
 exports.deleteCommentByCommentId = (request, response, next) => {
-    const {comment_id} = request.params
-    removeCommentsbyCommentId(comment_id).then((deletedComment) => {
-        response.status(204).send({deletedComment})
+  const { comment_id } = request.params;
+  removeCommentsbyCommentId(comment_id)
+    .then((deletedComment) => {
+      response.status(204).send({ deletedComment });
     })
+    .catch((err) => {
+      next(err);
+    });
 };
