@@ -243,6 +243,73 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: resonds with the article object votes property updated when votes are added", () => {
+    return request(app)
+      .patch("/api/articles/3")
+      .send({
+        inc_votes: 10,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 3,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 10,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("200: resonds with the article object votes property updated when votes are subtracted", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({
+        inc_votes: -50,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 50,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("400: responds with an error if send an invalid value for a field", () => {
+    return request(app)
+      .patch("/api/articles/4")
+      .send({
+        title: "new title",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("400: responds with an error if send an invalid value for the votes", () => {
+    return request(app)
+      .patch("/api/articles/6")
+      .send({
+        votes:["add 5 votes"],
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+});
+
 describe("invalid path request", () => {
   test("404: responds with an error if the path does not exist", () => {
     return request(app)

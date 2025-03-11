@@ -71,5 +71,22 @@
         "created_at": 1606176480000
       }]
     }
+  },
+  "PATCH /api/articles/:article_id":{
+    "desciption": "updates an article by the article_id for the votes property",
+    "queries":[],
+    "exampleResponse":{
+      "updatedArticle" :
+      [{
+        "title": "Sony Vaio; or, The Laptop",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "Call me Mitchell. Some years ago..",
+        "created_at": 1602828180000,
+        "votes": 10,
+        "article_img_url":
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }]
+    }
   }
 }
