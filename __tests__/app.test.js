@@ -229,7 +229,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("bad request");
       });
   });
-  test("400: responds with an error if send an invalid value for a field", () => {
+  test("400: responds with an error if sent an invalid value for a field", () => {
     return request(app)
       .post("/api/articles/4/comments")
       .send({
@@ -241,9 +241,29 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("bad request");
       });
   });
+  test("400: responds with an error when one of the fields is missing from the request", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({
+        body: "test comment",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+  test("400: responds with an error when passed an empty object", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
   test("404: responds with an error if the article_id does not exist", () => {
     return request(app)
-      .get("/api/articles/7893/comments")
+      .get("/api/articles/45376/comments")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("resource not found");
@@ -251,7 +271,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
   test("400: responds with an error if the article_id is invalid", () => {
     return request(app)
-      .get("/api/articles/banana/comments")
+      .get("/api/articles/notanumber/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
@@ -302,7 +322,7 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
-  test("400: responds with an error if send an invalid value for a field", () => {
+  test("400: responds with an error if sent an invalid value for the field", () => {
     return request(app)
       .patch("/api/articles/4")
       .send({
@@ -313,11 +333,11 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("bad request");
       });
   });
-  test("400: responds with an error if send an invalid value for the votes", () => {
+  test("400: responds with an error if sent an invalid value for the votes", () => {
     return request(app)
       .patch("/api/articles/6")
       .send({
-        votes:["add 5 votes"],
+        votes: ["add 5 votes"],
       })
       .expect(400)
       .then(({ body }) => {
