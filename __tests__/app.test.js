@@ -93,48 +93,48 @@ describe("GET /api/articles", () => {
 describe("GET /api/articles?sort_by=", () => {
   test("200: responds with the articles sorted by created_at descending", () => {
     return request(app)
-    .get("/api/articles?sort_by=created_at")
-    .expect(200)
-    .then(({body}) => {
-      const {sortedArticles} = body
-      expect(sortedArticles).toBeSortedBy('created_at', {descending: true})
-    })
+      .get("/api/articles?sort_by=created_at")
+      .expect(200)
+      .then(({ body }) => {
+        const { sortedArticles } = body;
+        expect(sortedArticles).toBeSortedBy("created_at", { descending: true });
+      });
   });
   test("200: responds with the articles sorted by votes descending", () => {
     return request(app)
-    .get("/api/articles?sort_by=votes")
-    .expect(200)
-    .then(({body}) => {
-      const {sortedArticles} = body
-      expect(sortedArticles).toBeSortedBy('votes', {descending: true})
-    })
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { sortedArticles } = body;
+        expect(sortedArticles).toBeSortedBy("votes", { descending: true });
+      });
   });
   test("200: responds with the articles sorted by author descending", () => {
     return request(app)
-    .get("/api/articles?sort_by=author")
-    .expect(200)
-    .then(({body}) => {
-      const {sortedArticles} = body
-      expect(sortedArticles).toBeSortedBy('author', {descending: true})
-    })
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        const { sortedArticles } = body;
+        expect(sortedArticles).toBeSortedBy("author", { descending: true });
+      });
   });
   test("200: responds with the articles sorted by topic descending", () => {
     return request(app)
-    .get("/api/articles?sort_by=topic")
-    .expect(200)
-    .then(({body}) => {
-      const {sortedArticles} = body
-      expect(sortedArticles).toBeSortedBy('topic', {descending: true})
-    })
+      .get("/api/articles?sort_by=topic")
+      .expect(200)
+      .then(({ body }) => {
+        const { sortedArticles } = body;
+        expect(sortedArticles).toBeSortedBy("topic", { descending: true });
+      });
   });
   test("200: responds with the articles sorted by title descending", () => {
     return request(app)
-    .get("/api/articles?sort_by=title")
-    .expect(200)
-    .then(({body}) => {
-      const {sortedArticles} = body
-      expect(sortedArticles).toBeSortedBy('title', {descending: true})
-    })
+      .get("/api/articles?sort_by=title")
+      .expect(200)
+      .then(({ body }) => {
+        const { sortedArticles } = body;
+        expect(sortedArticles).toBeSortedBy("title", { descending: true });
+      });
   });
   test("200: responds with the articles sorted by created_at descending when no sort by key is given", () => {
     return request(app)
@@ -143,58 +143,66 @@ describe("GET /api/articles?sort_by=", () => {
         const { articles } = body;
         expect(articles).toBeSortedBy("created_at", { descending: true });
       });
-  })
+  });
   test("400: responds with an error if the sort key is invalid", () => {
     return request(app)
-    .get("/api/articles?sort_by=1234")
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe("invalid sort by value")
-    })
-  })
+      .get("/api/articles?sort_by=1234")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid sort by value");
+      });
+  });
   test("400: responds with an error if the column specified is not an allowed input", () => {
     return request(app)
-    .get("/api/articles?sort_by=slug")
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe("invalid sort by value")
-    })
-  })
-
+      .get("/api/articles?sort_by=slug")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid sort by value");
+      });
+  });
 });
 
-describe.only("GET /api/articles?sort_by=&order=", () => {
+describe("GET /api/articles?sort_by=&order=", () => {
   test("200: responds articles ordered descending", () => {
     return request(app)
-    .get("/api/articles?sort_by=title&order=desc")
-    .expect(200)
-    .then(({body}) => {
-      const {orderedArticles} = body
-      expect(orderedArticles).toBeSortedBy('title', {descending: true})
-    })
-  })
+      .get("/api/articles?sort_by=title&order=desc")
+      .expect(200)
+      .then(({ body }) => {
+        const { orderedArticles } = body;
+        expect(orderedArticles).toBeSortedBy("title", { descending: true });
+      });
+  });
   test("200: responds articles ordered ascending", () => {
     return request(app)
-    .get("/api/articles?sort_by=topic&order=asc")
-    .expect(200)
-    .then(({body}) => {
-      const {orderedArticles} = body
-      expect(orderedArticles).toBeSortedBy('topic', {descending: false})
-    })
-  })
+      .get("/api/articles?sort_by=topic&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { orderedArticles } = body;
+        expect(orderedArticles).toBeSortedBy("topic", { descending: false });
+      });
+  });
   test("200: responds with articles sorted by created_at when sorted by is not specified but order is", () => {
     return request(app)
-    .get("/api/articles?order=desc")
-    .expect(200)
+      .get("/api/articles?order=desc")
+      .expect(200)
+      .then(({ body }) => {
+        const { orderedArticles } = body;
+        expect(orderedArticles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("400: responds with an error if the order key is not asc or desc", () => {
+    return request(app)
+    .get("/api/articles?sort_by=topic&order=other")
+    .expect(400)
     .then(({body}) => {
-      const {orderedArticles} = body
-      expect(orderedArticles).toBeSortedBy('created_at', {descending: true})
-  })
-  test.todo("400: responds with an error if the order key is not asc or desc")
-  test.todo("400: responds with an error if the order key is invalid - same as above?")
-  test.todo("errors if sort_by invalid/not specified")
-})
-})
+      expect(body.msg).toBe("invalid order value")
+    })
+  });
+  test.todo("400: responds with an error if the order key is not asc or desc and sort_by isn't specified'")
+  test.todo("errors if sort_by invalid/not specified");
+});
 //orders desc for valid column
 //order asc
 //error iftries to order by invalid column

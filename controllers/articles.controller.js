@@ -13,6 +13,8 @@ exports.getArticles = (request, response, next) => {
   if(sort_by && order){
     fetchArticles(sort_by, order).then((rows) => {
         response.status(200).send({orderedArticles: rows})
+    }).catch((err) => {
+        next(err)
     })
   }
 

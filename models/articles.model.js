@@ -4,6 +4,8 @@ const { checkExists } = require("../db/seeds/utils");
 exports.fetchArticles = (sortValue, orderValue) => {
   const validSortColumns = ["created_at", "votes", "author", "topic", "title"];
   const validOrderColumns = ["asc", "desc"];
+  const orderDirection =
+    orderValue && validOrderColumns.includes(orderValue) ? orderValue : "desc";
 
   let queryString = `SELECT * FROM articles `;
   let queryParams = [];
@@ -17,23 +19,27 @@ exports.fetchArticles = (sortValue, orderValue) => {
     return Promise.reject({ status: 400, msg: "invalid sort by value" });
   }
 
-  const orderDirection = orderValue && validOrderColumns.includes(orderValue) 
-  ? orderValue
-  : "desc";
-
-  if(sortValue &&
-    validSortColumns.includes(sortValue) &&
-    orderValue && validOrderColumns.includes(orderValue)){
-    queryString += `ORDER BY ${sortValue} ${orderDirection.toUpperCase()}`;
-
-    return db.query(queryString, queryParams)
-      .then(({ rows }) => {
-        return rows;
-      })
+  //if not allowed order value
+  else if(orderValue && !validOrderColumns.includes(orderValue)){
+    return Promise.reject({ status: 400, msg: "invalid order value" })
   }
 
-//if allowed input sort by that value
-if (sortValue && validSortColumns.includes(sortValue)) {
+  //if allowed sort value and allowed order value
+  else if (
+    sortValue &&
+    validSortColumns.includes(sortValue) &&
+    orderValue &&
+    validOrderColumns.includes(orderValue)
+  ) {
+    queryString += `ORDER BY ${sortValue} ${orderDirection.toUpperCase()}`;
+
+    return db.query(queryString, queryParams).then(({ rows }) => {
+      return rows;
+    });
+  }
+
+  //if allowed input sort by that value
+  else if (sortValue && validSortColumns.includes(sortValue)) {
     queryString += `ORDER BY ${sortValue} DESC`;
     return db.query(queryString).then(({ rows }) => {
       return rows;
