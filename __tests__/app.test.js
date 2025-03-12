@@ -163,7 +163,7 @@ describe("GET /api/articles?sort_by=", () => {
 
 });
 
-describe("GET /api/articles?sort_by=&order=", () => {
+describe.only("GET /api/articles?sort_by=&order=", () => {
   test("200: responds articles ordered descending", () => {
     return request(app)
     .get("/api/articles?sort_by=title&order=desc")
@@ -182,10 +182,18 @@ describe("GET /api/articles?sort_by=&order=", () => {
       expect(orderedArticles).toBeSortedBy('topic', {descending: false})
     })
   })
-  test.todo("200: responds with articles sorted by created_at when sorted by is not specified but order is")
+  test("200: responds with articles sorted by created_at when sorted by is not specified but order is", () => {
+    return request(app)
+    .get("/api/articles?order=desc")
+    .expect(200)
+    .then(({body}) => {
+      const {orderedArticles} = body
+      expect(orderedArticles).toBeSortedBy('created_at', {descending: true})
+  })
   test.todo("400: responds with an error if the order key is not asc or desc")
   test.todo("400: responds with an error if the order key is invalid - same as above?")
   test.todo("errors if sort_by invalid/not specified")
+})
 })
 //orders desc for valid column
 //order asc

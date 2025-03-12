@@ -7,41 +7,45 @@ exports.fetchArticles = (sortValue, orderValue) => {
 
   let queryString = `SELECT * FROM articles `;
   let queryParams = [];
-  
 
-    console.log(sortValue, orderValue, "sortValue and orderValue in model")
+  //console.log(sortValue, orderValue, "sortValue and orderValue in model")
 
-    //console.log(orderValue.toUpperCase(), "orderValue uppercase in model")
-
-    
+  //console.log(orderValue.toUpperCase(), "orderValue uppercase in model")
 
   //if not an allowed input send an error
   if (sortValue && !validSortColumns.includes(sortValue)) {
     return Promise.reject({ status: 400, msg: "invalid sort by value" });
   }
 
-  if(sortValue && validSortColumns.includes(sortValue) && orderValue === 'desc'){
-    queryString += `ORDER BY ${sortValue} DESC `
-        return db.query(queryString).then(({ rows }) => {
-            return rows
-    })
+  if (
+    sortValue &&
+    validSortColumns.includes(sortValue) &&
+    orderValue === "desc"
+  ) {
+    queryString += `ORDER BY ${sortValue} DESC `;
+    return db.query(queryString).then(({ rows }) => {
+      return rows;
+    });
   }
 
-  if(sortValue && validSortColumns.includes(sortValue) && orderValue === 'asc'){
-    queryString += `ORDER BY ${sortValue} ASC `
-        return db.query(queryString).then(({ rows }) => {
-            return rows
-    })
+  if (
+    sortValue &&
+    validSortColumns.includes(sortValue) &&
+    orderValue === "asc"
+  ) {
+    queryString += `ORDER BY ${sortValue} ASC `;
+    return db.query(queryString).then(({ rows }) => {
+      return rows;
+    });
   }
 
-  //if allowed input sort by that value
-  if (sortValue && validSortColumns.includes(sortValue)) {
-        queryString += `ORDER BY ${sortValue} DESC`;
-        return db.query(queryString).then(({ rows }) => {
-          return rows;
-    
-});
-}
+//if allowed input sort by that value
+if (sortValue && validSortColumns.includes(sortValue)) {
+    queryString += `ORDER BY ${sortValue} DESC`;
+    return db.query(queryString).then(({ rows }) => {
+      return rows;
+    });
+  }
 
   //if /api/articles
   else {
