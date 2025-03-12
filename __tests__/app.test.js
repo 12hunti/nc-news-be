@@ -271,7 +271,14 @@ describe("GET /api/articles?topic=", () => {
       expect(articles).toEqual([])
   })
 })
-  test.todo("400: responds with an error if the topic is invalid")
+  test("400: responds with an error if the topic is invalid", () => {
+    return request(app)
+    .get("/api/articles?topic=notatopic")
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe("invalid topic value")
+    })
+  })
 })
 
 describe("GET /api/articles/:article_id", () => {

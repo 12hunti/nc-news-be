@@ -35,7 +35,8 @@ exports.getArticles = (request, response, next) => {
   } else if (topic) {
     filterArticlesByTopic(topic).then((rows) => {
       response.status(200).send({ articles: rows });
-    });
+    })
+    .catch((err) => next(err));
   } else {
     fetchArticles()
       .then(({ rows }) => {

@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 const { checkExists } = require("../db/seeds/utils");
 
-exports.fetchArticles = (sortValue, orderValue, topicValue) => {
+exports.fetchArticles = (sortValue, orderValue) => {
   const validSortColumns = ["created_at", "votes", "author", "topic", "title"];
   const validOrderColumns = ["asc", "desc"];
   const orderDirection =
@@ -16,24 +16,19 @@ exports.fetchArticles = (sortValue, orderValue, topicValue) => {
     return Promise.reject({ status: 400, msg: "invalid order value" });
   }
   //if /api/articles?sort_by=&order=
-  else if (
-    sortValue &&
-    validSortColumns.includes(sortValue) &&
-    orderValue &&
-    validOrderColumns.includes(orderValue)
-  ) {
+  else if (sortValue && orderValue) {
     queryString += `ORDER BY ${sortValue} ${orderDirection.toUpperCase()}`;
     return db.query(queryString).then(({ rows }) => {
       return rows;
     });
   }
   //if /api/articles?sort_by=
-  else if (sortValue && validSortColumns.includes(sortValue)) {
+  else if (sortValue) {
     queryString += `ORDER BY ${sortValue} DESC`;
     return db.query(queryString).then(({ rows }) => {
       return rows;
     });
-  } 
+  }
   //if /api/articles
   else {
     queryString += `ORDER BY created_at DESC`;
@@ -42,13 +37,17 @@ exports.fetchArticles = (sortValue, orderValue, topicValue) => {
 };
 
 exports.filterArticlesByTopic = (topic) => {
-    const validTopicColumns = ["mitch", "cats", "paper"]; //football, cooking and coding for dev data
-    if (topic && validTopicColumns.includes(topic)) {
-        return db.query(`SELECT * FROM articles WHERE topic = $1`, [topic]).then(({ rows }) => {
-          return rows;
-        });
-      }
-}
+  const validTopicColumns = ["mitch", "cats", "paper"]; //football, cooking and coding for dev data
+  if (!validTopicColumns.includes(topic)) {
+    return Promise.reject({ status: 400, msg: "invalid topic value" });
+  } else {
+    return db
+      .query(`SELECT * FROM articles WHERE topic = $1`, [topic])
+      .then(({ rows }) => {
+        return rows;
+      });
+  }
+};
 
 exports.fetchArticleById = (id) => {
   return db
