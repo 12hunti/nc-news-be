@@ -90,6 +90,63 @@ describe("GET /api/articles", () => {
   });
 });
 
+describe("GET /api/articles?sort_by=", () => {
+  test("200: responds with the articles sorted by created_at descending", () => {
+    return request(app)
+    .get("/api/articles?sort_by=created_at")
+    .expect(200)
+    .then(({body}) => {
+      const {sortedArticles} = body
+      expect(sortedArticles).toBeSortedBy('created_at', {descending: true})
+    })
+  });
+  test("200: responds with the articles sorted by votes descending", () => {
+    return request(app)
+    .get("/api/articles?sort_by=votes")
+    .expect(200)
+    .then(({body}) => {
+      const {sortedArticles} = body
+      expect(sortedArticles).toBeSortedBy('votes', {descending: true})
+    })
+  });
+  test("200: responds with the articles sorted by author descending", () => {
+    return request(app)
+    .get("/api/articles?sort_by=author")
+    .expect(200)
+    .then(({body}) => {
+      const {sortedArticles} = body
+      expect(sortedArticles).toBeSortedBy('author', {descending: true})
+    })
+  });
+  test("200: responds with the articles sorted by topic descending", () => {
+    return request(app)
+    .get("/api/articles?sort_by=topic")
+    .expect(200)
+    .then(({body}) => {
+      const {sortedArticles} = body
+      expect(sortedArticles).toBeSortedBy('topic', {descending: true})
+    })
+  });
+  test("200: responds with the articles sorted by title descending", () => {
+    return request(app)
+    .get("/api/articles?sort_by=title")
+    .expect(200)
+    .then(({body}) => {
+      const {sortedArticles} = body
+      expect(sortedArticles).toBeSortedBy('title', {descending: true})
+    })
+  });
+  
+
+ 
+  //error if tries to sort by invalid column
+});
+
+//describe("GET /api/articles?sort_by=?order=")
+//orders desc for valid column
+//order asc
+//error iftries to order by invalid column
+
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with the article object from the requested id", () => {
     return request(app)
@@ -115,7 +172,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/7893")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("resource not found");
+        expect(body.msg).toBe("article_id not found");
       });
   });
   test("400: responds with an error if the article_id is invalid", () => {
@@ -349,7 +406,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .get("/api/articles/7893")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("resource not found");
+        expect(body.msg).toBe("article_id not found");
       });
   });
   test("400: responds with an error if the article_id is invalid", () => {
@@ -365,12 +422,12 @@ describe("PATCH /api/articles/:article_id", () => {
 describe("DELETE /api/comments/:comment_id", () => {
   test("204: responds with the status code and no content", () => {
     return request(app)
-    .delete("/api/comments/3")
-    .expect(204)
-    .then(({body}) => {
-      expect(body).toEqual({})
-    })
-  })
+      .delete("/api/comments/3")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
   test("400: responds with an error if the comment_id is invalid", () => {
     return request(app)
       .delete("/api/comments/apple")
@@ -387,7 +444,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         expect(body.msg).toBe("resource not found");
       });
   });
-})
+});
 
 describe("GET /api/users", () => {
   test("200: responds with the users object with with user containing the correct properties", () => {
@@ -400,12 +457,11 @@ describe("GET /api/users", () => {
             username: expect.any(String),
             name: expect.any(String),
             avatar_url: expect.any(String),
-            
           });
         });
       });
   });
-})
+});
 
 describe("invalid path request", () => {
   test("404: responds with an error if the path does not exist", () => {
