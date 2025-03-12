@@ -221,16 +221,16 @@ describe("GET /api/articles?sort_by=&order=", () => {
 describe("GET /api/articles?topic=", () => {
   test("200: responds with the articles of the specified topic value", () => {
     return request(app)
-    .get("/api/articles?topic=mitch")
-    .expect(200)
-    .then(({body}) => {
-      const {articles} = body
-      expect(body.articles.length).toBe(12);
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(body.articles.length).toBe(12);
         body.articles.forEach((article) => {
           expect(article).toMatchObject({
             article_id: expect.any(Number),
             title: expect.any(String),
-            topic: 'mitch',
+            topic: "mitch",
             author: expect.any(String),
             body: expect.any(String),
             created_at: expect.any(String),
@@ -238,15 +238,15 @@ describe("GET /api/articles?topic=", () => {
             article_img_url: expect.any(String),
           });
         });
-    })
-  })
+      });
+  });
   test("200: responds with all of the articles if the topic is omitted", () => {
     return request(app)
-    .get("/api/articles?topic=")
-    .expect(200)
-    .then(({body}) => {
-      const {articles} = body
-      expect(body.articles.length).toBe(13);
+      .get("/api/articles?topic=")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(body.articles.length).toBe(13);
         body.articles.forEach((article) => {
           expect(article).toMatchObject({
             article_id: expect.any(Number),
@@ -259,27 +259,27 @@ describe("GET /api/articles?topic=", () => {
             article_img_url: expect.any(String),
           });
         });
-    })
-  })
+      });
+  });
   test("200: responds with an empty array if no articles are found for a given topic", () => {
     return request(app)
-    .get("/api/articles?topic=paper")
-    .expect(200)
-    .then(({body}) => {
-      const {articles} = body
-      expect(body.articles.length).toBe(0)
-      expect(articles).toEqual([])
-  })
-})
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(body.articles.length).toBe(0);
+        expect(articles).toEqual([]);
+      });
+  });
   test("400: responds with an error if the topic is invalid", () => {
     return request(app)
-    .get("/api/articles?topic=notatopic")
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe("invalid topic value")
-    })
-  })
-})
+      .get("/api/articles?topic=notatopic")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid topic value");
+      });
+  });
+});
 
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with the article object from the requested id", () => {
@@ -297,7 +297,17 @@ describe("GET /api/articles/:article_id", () => {
           created_at: expect.any(String),
           votes: expect.any(Number),
           article_img_url: expect.any(String),
+          comment_count: expect.any(Number),
         });
+      });
+  });
+
+  test("200: responds with the comment_count property for the article", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article.comment_count).toBe(11);
       });
   });
 
