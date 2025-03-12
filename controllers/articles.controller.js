@@ -21,6 +21,8 @@ exports.getArticles = (request, response, next) => {
   else if(order){
     fetchArticles("created_at", order).then((rows) => {
         response.status(200).send({orderedArticles: rows})
+    }).catch((err) => {
+        next(err)
     })
   }
 
