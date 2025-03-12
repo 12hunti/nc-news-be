@@ -10,10 +10,10 @@ exports.fetchArticles = (sortValue) => {
 
   //valid inputs for the sortValue query
 
-  //if not an allowed input send an error - below would break /api/articles put within if sortvalue?
-  //   if (!allowedInputs.includes(sortValue)) {
-  //     return Promise.reject({ status: 404, msg: "invalid input" });
-  //   }
+  //if not an allowed input send an error
+    if (sortValue && !validSortColumns.includes(sortValue)) {
+      return Promise.reject({ status: 400, msg: "invalid sort by value" });
+    }
 
   //if allowed input sort by that value
 

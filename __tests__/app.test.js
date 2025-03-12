@@ -136,10 +136,16 @@ describe("GET /api/articles?sort_by=", () => {
       expect(sortedArticles).toBeSortedBy('title', {descending: true})
     })
   });
-  
+  test("400: responds with an error if the sort key is invalid", () => {
+    return request(app)
+    .get("/api/articles?sort_by=1234")
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe("invalid sort by value")
+    })
+  })
+  //test.todo("404: responds with an error if the sort key does not exist")
 
- 
-  //error if tries to sort by invalid column
 });
 
 //describe("GET /api/articles?sort_by=?order=")
