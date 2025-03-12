@@ -27,6 +27,13 @@ exports.fetchArticles = (sortValue, orderValue) => {
     })
   }
 
+  if(sortValue && validSortColumns.includes(sortValue) && orderValue === 'asc'){
+    queryString += `ORDER BY ${sortValue} ASC `
+        return db.query(queryString).then(({ rows }) => {
+            return rows
+    })
+  }
+
   //if allowed input sort by that value
   if (sortValue && validSortColumns.includes(sortValue)) {
         queryString += `ORDER BY ${sortValue} DESC`;
