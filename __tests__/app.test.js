@@ -144,7 +144,14 @@ describe("GET /api/articles?sort_by=", () => {
       expect(body.msg).toBe("invalid sort by value")
     })
   })
-  //test.todo("404: responds with an error if the sort key does not exist")
+  test("400: responds with an error if the column specified is not an allowed input", () => {
+    return request(app)
+    .get("/api/articles?sort_by=slug")
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe("invalid sort by value")
+    })
+  })
 
 });
 
