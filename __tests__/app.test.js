@@ -194,21 +194,21 @@ describe("GET /api/articles?sort_by=&order=", () => {
   });
   test("400: responds with an error if the order key is not asc or desc", () => {
     return request(app)
-    .get("/api/articles?sort_by=topic&order=other")
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe("invalid order value")
-    })
+      .get("/api/articles?sort_by=topic&order=other")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid order value");
+      });
   });
   test("400: responds with an error if the order key is not asc or desc and sort_by isn't specified", () => {
     return request(app)
-    .get("/api/articles?order=other")
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe("invalid order value")
-    })
-  })
-  test("400: responds with an error if the sort key is invalid", () => {
+      .get("/api/articles?order=other")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid order value");
+      });
+  });
+  test.only("400: responds with an error if the sort key is invalid", () => {
     return request(app)
       .get("/api/articles?sort_by=1234&order=asc")
       .expect(400)
@@ -216,11 +216,7 @@ describe("GET /api/articles?sort_by=&order=", () => {
         expect(body.msg).toBe("invalid sort by value");
       });
   });
-  test.todo("errors if sort_by invalid/not specified");
 });
-//orders desc for valid column
-//order asc
-//error iftries to order by invalid column
 
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with the article object from the requested id", () => {

@@ -5,28 +5,25 @@ const {
 } = require("../models/articles.model");
 
 exports.getArticles = (request, response, next) => {
-
   const { sort_by, order } = request.query;
 
-  //console.log(request.query, "request.query in controller")
-
-  if(sort_by && order){
-    fetchArticles(sort_by, order).then((rows) => {
-        response.status(200).send({orderedArticles: rows})
-    }).catch((err) => {
-        next(err)
-    })
-  }
-
-  else if(order){
-    fetchArticles("created_at", order).then((rows) => {
-        response.status(200).send({orderedArticles: rows})
-    }).catch((err) => {
-        next(err)
-    })
-  }
-
-  else if (sort_by) {
+  if (sort_by && order) {
+    fetchArticles(sort_by, order)
+      .then((rows) => {
+        response.status(200).send({ orderedArticles: rows });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  } else if (order) {
+    fetchArticles("created_at", order)
+      .then((rows) => {
+        response.status(200).send({ orderedArticles: rows });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  } else if (sort_by) {
     fetchArticles(sort_by)
       .then((rows) => {
         response.status(200).send({ sortedArticles: rows });

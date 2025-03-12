@@ -10,21 +10,17 @@ exports.fetchArticles = (sortValue, orderValue) => {
   let queryString = `SELECT * FROM articles `;
   let queryParams = [];
 
-  //console.log(sortValue, orderValue, "sortValue and orderValue in model")
-
-  //console.log(orderValue.toUpperCase(), "orderValue uppercase in model")
-
   //if not an allowed input send an error
   if (sortValue && !validSortColumns.includes(sortValue)) {
     return Promise.reject({ status: 400, msg: "invalid sort by value" });
   }
 
   //if not allowed order value
-  else if(orderValue && !validOrderColumns.includes(orderValue)){
-    return Promise.reject({ status: 400, msg: "invalid order value" })
+  else if (orderValue && !validOrderColumns.includes(orderValue)) {
+    return Promise.reject({ status: 400, msg: "invalid order value" });
   }
 
-  //if allowed sort value and allowed order value
+  //if /api/articles?sort_by=&order=
   else if (
     sortValue &&
     validSortColumns.includes(sortValue) &&
@@ -38,7 +34,7 @@ exports.fetchArticles = (sortValue, orderValue) => {
     });
   }
 
-  //if allowed input sort by that value
+  //if /api/articles?sort_by=
   else if (sortValue && validSortColumns.includes(sortValue)) {
     queryString += `ORDER BY ${sortValue} DESC`;
     return db.query(queryString).then(({ rows }) => {
@@ -52,19 +48,6 @@ exports.fetchArticles = (sortValue, orderValue) => {
     return db.query(queryString, queryParams);
   }
 };
-
-//if /api/articles/:article_id
-//   if (article_id) {
-//     queryParams.push(article_id);
-//     queryString += `WHERE article_id = $1 `;
-
-//     return checkExists("articles", "article_id", article_id).then(() => {
-//       queryString += `ORDER BY created_at DESC `;
-//       return db.query(queryString, queryParams).then(({ rows }) => {
-//         return rows[0];
-//       });
-//     });
-//   }
 
 exports.fetchArticleById = (id) => {
   return db
@@ -106,5 +89,3 @@ exports.updateArticleByID = (article_id, articleData) => {
       });
   });
 };
-
-//check if any unwanted fields
