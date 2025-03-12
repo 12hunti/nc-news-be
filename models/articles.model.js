@@ -17,26 +17,19 @@ exports.fetchArticles = (sortValue, orderValue) => {
     return Promise.reject({ status: 400, msg: "invalid sort by value" });
   }
 
-  if (
-    sortValue &&
-    validSortColumns.includes(sortValue) &&
-    orderValue === "desc"
-  ) {
-    queryString += `ORDER BY ${sortValue} DESC `;
-    return db.query(queryString).then(({ rows }) => {
-      return rows;
-    });
-  }
+  const orderDirection = orderValue && validOrderColumns.includes(orderValue) 
+  ? orderValue
+  : "desc";
 
-  if (
-    sortValue &&
+  if(sortValue &&
     validSortColumns.includes(sortValue) &&
-    orderValue === "asc"
-  ) {
-    queryString += `ORDER BY ${sortValue} ASC `;
-    return db.query(queryString).then(({ rows }) => {
-      return rows;
-    });
+    orderValue && validOrderColumns.includes(orderValue)){
+    queryString += `ORDER BY ${sortValue} ${orderDirection.toUpperCase()}`;
+
+    return db.query(queryString, queryParams)
+      .then(({ rows }) => {
+        return rows;
+      })
   }
 
 //if allowed input sort by that value
