@@ -240,7 +240,27 @@ describe("GET /api/articles?topic=", () => {
         });
     })
   })
-  test.todo("200: responds with all of the articles if the topic is omitted")
+  test("200: responds with all of the articles if the topic is omitted", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({body}) => {
+      const {articles} = body
+      expect(body.articles.length).toBe(13);
+        body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          });
+        });
+    })
+  })
   test.todo("200: responds with an empty array if no articles are found for a given topic")
   test.todo("400: responds with an error if the topic is invalid")
 })
