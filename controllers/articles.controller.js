@@ -2,10 +2,11 @@ const {
   fetchArticles,
   updateArticleByID,
   fetchArticleById,
+  filterArticlesByTopic,
 } = require("../models/articles.model");
 
 exports.getArticles = (request, response, next) => {
-  const { sort_by, order } = request.query;
+  const { sort_by, order, topic } = request.query;
 
   if (sort_by && order) {
     fetchArticles(sort_by, order)
@@ -31,6 +32,11 @@ exports.getArticles = (request, response, next) => {
       .catch((err) => {
         next(err);
       });
+  } else if (topic) {
+    filterArticlesByTopic(topic).then((rows) => {
+      response.status(200).send({ articles: rows });
+    })
+    .catch((err) => next(err));
   } else {
     fetchArticles()
       .then(({ rows }) => {

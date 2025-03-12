@@ -138,7 +138,7 @@ describe("GET /api/articles?sort_by=", () => {
   });
   test("200: responds with the articles sorted by created_at descending when no sort by key is given", () => {
     return request(app)
-      .get("/api/articles")
+      .get("/api/articles?sort_by=")
       .then(({ body }) => {
         const { articles } = body;
         expect(articles).toBeSortedBy("created_at", { descending: true });
@@ -183,7 +183,7 @@ describe("GET /api/articles?sort_by=&order=", () => {
   });
   test("200: responds with articles sorted by created_at when sorted by is not specified but order is", () => {
     return request(app)
-      .get("/api/articles?order=desc")
+      .get("/api/articles?sorted_by=&order=desc")
       .expect(200)
       .then(({ body }) => {
         const { orderedArticles } = body;
@@ -208,7 +208,7 @@ describe("GET /api/articles?sort_by=&order=", () => {
         expect(body.msg).toBe("invalid order value");
       });
   });
-  test.only("400: responds with an error if the sort key is invalid", () => {
+  test("400: responds with an error if the sort key is invalid", () => {
     return request(app)
       .get("/api/articles?sort_by=1234&order=asc")
       .expect(400)
@@ -217,6 +217,69 @@ describe("GET /api/articles?sort_by=&order=", () => {
       });
   });
 });
+
+describe("GET /api/articles?topic=", () => {
+  test("200: responds with the articles of the specified topic value", () => {
+    return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    .then(({body}) => {
+      const {articles} = body
+      expect(body.articles.length).toBe(12);
+        body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: 'mitch',
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          });
+        });
+    })
+  })
+  test("200: responds with all of the articles if the topic is omitted", () => {
+    return request(app)
+    .get("/api/articles?topic=")
+    .expect(200)
+    .then(({body}) => {
+      const {articles} = body
+      expect(body.articles.length).toBe(13);
+        body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          });
+        });
+    })
+  })
+  test("200: responds with an empty array if no articles are found for a given topic", () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(200)
+    .then(({body}) => {
+      const {articles} = body
+      expect(body.articles.length).toBe(0)
+      expect(articles).toEqual([])
+  })
+})
+  test("400: responds with an error if the topic is invalid", () => {
+    return request(app)
+    .get("/api/articles?topic=notatopic")
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe("invalid topic value")
+    })
+  })
+})
 
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with the article object from the requested id", () => {

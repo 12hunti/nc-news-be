@@ -6,46 +6,46 @@ exports.fetchArticles = (sortValue, orderValue) => {
   const validOrderColumns = ["asc", "desc"];
   const orderDirection =
     orderValue && validOrderColumns.includes(orderValue) ? orderValue : "desc";
-
   let queryString = `SELECT * FROM articles `;
-  let queryParams = [];
-
   //if not an allowed input send an error
   if (sortValue && !validSortColumns.includes(sortValue)) {
     return Promise.reject({ status: 400, msg: "invalid sort by value" });
   }
-
   //if not allowed order value
   else if (orderValue && !validOrderColumns.includes(orderValue)) {
     return Promise.reject({ status: 400, msg: "invalid order value" });
   }
-
   //if /api/articles?sort_by=&order=
-  else if (
-    sortValue &&
-    validSortColumns.includes(sortValue) &&
-    orderValue &&
-    validOrderColumns.includes(orderValue)
-  ) {
+  else if (sortValue && orderValue) {
     queryString += `ORDER BY ${sortValue} ${orderDirection.toUpperCase()}`;
-
-    return db.query(queryString, queryParams).then(({ rows }) => {
+    return db.query(queryString).then(({ rows }) => {
       return rows;
     });
   }
-
   //if /api/articles?sort_by=
-  else if (sortValue && validSortColumns.includes(sortValue)) {
+  else if (sortValue) {
     queryString += `ORDER BY ${sortValue} DESC`;
     return db.query(queryString).then(({ rows }) => {
       return rows;
     });
   }
-
   //if /api/articles
   else {
     queryString += `ORDER BY created_at DESC`;
-    return db.query(queryString, queryParams);
+    return db.query(queryString);
+  }
+};
+
+exports.filterArticlesByTopic = (topic) => {
+  const validTopicColumns = ["mitch", "cats", "paper"]; //football, cooking and coding for dev data
+  if (!validTopicColumns.includes(topic)) {
+    return Promise.reject({ status: 400, msg: "invalid topic value" });
+  } else {
+    return db
+      .query(`SELECT * FROM articles WHERE topic = $1`, [topic])
+      .then(({ rows }) => {
+        return rows;
+      });
   }
 };
 
