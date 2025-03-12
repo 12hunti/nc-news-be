@@ -6,7 +6,15 @@ const {
 
 exports.getArticles = (request, response, next) => {
 
-  const { sort_by } = request.query;
+  const { sort_by, order } = request.query;
+
+  console.log(request.query, "request.query in controller")
+
+  if(sort_by && order){
+    fetchArticles(sort_by, order).then((rows) => {
+        response.status(200).send({orderedArticles: rows})
+    })
+  }
 
   if (sort_by) {
     fetchArticles(sort_by)

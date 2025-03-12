@@ -1,31 +1,40 @@
 const db = require("../db/connection");
 const { checkExists } = require("../db/seeds/utils");
 
-exports.fetchArticles = (sortValue) => {
+exports.fetchArticles = (sortValue, orderValue) => {
   const validSortColumns = ["created_at", "votes", "author", "topic", "title"];
+  const validOrderColumns = ["asc", "desc"];
 
   let queryString = `SELECT * FROM articles `;
   let queryParams = [];
+  
 
+    console.log(sortValue, orderValue, "sortValue and orderValue in model")
 
-  //valid inputs for the sortValue query
+    //console.log(orderValue.toUpperCase(), "orderValue uppercase in model")
+
+    
 
   //if not an allowed input send an error
-    if (sortValue && !validSortColumns.includes(sortValue)) {
-      return Promise.reject({ status: 400, msg: "invalid sort by value" });
-    }
+  if (sortValue && !validSortColumns.includes(sortValue)) {
+    return Promise.reject({ status: 400, msg: "invalid sort by value" });
+  }
+
+  if(sortValue && validSortColumns.includes(sortValue) && orderValue === 'desc'){
+    queryString += `ORDER BY ${sortValue} DESC `
+        return db.query(queryString).then(({ rows }) => {
+            return rows
+    })
+  }
 
   //if allowed input sort by that value
-
-
   if (sortValue && validSortColumns.includes(sortValue)) {
-    // queryParams.push(sortValue);
-    // console.log(queryParams, "queryParams inside if statement in model")
-    queryString += `ORDER BY ${sortValue} DESC`;
-    return db.query(queryString).then(({rows}) => {
-        return rows
-    });
-  }
+        queryString += `ORDER BY ${sortValue} DESC`;
+        return db.query(queryString).then(({ rows }) => {
+          return rows;
+    
+});
+}
 
   //if /api/articles
   else {
@@ -33,15 +42,6 @@ exports.fetchArticles = (sortValue) => {
     return db.query(queryString, queryParams);
   }
 };
-
-//if invalid order value given send an error
-
-//if no order value given default to desc
-//   if (!orderValue) {
-//     queryString += `DESC`;
-//   }
-
-//if order value given use that value asc or desc
 
 //if /api/articles/:article_id
 //   if (article_id) {
