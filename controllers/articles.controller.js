@@ -10,37 +10,38 @@ exports.getArticles = (request, response, next) => {
 
   if (sort_by && order) {
     fetchArticles(sort_by, order)
-      .then((rows) => {
-        response.status(200).send({ orderedArticles: rows });
+      .then((orderedArticles) => {
+        response.status(200).send({ orderedArticles });
       })
       .catch((err) => {
         next(err);
       });
   } else if (order) {
     fetchArticles("created_at", order)
-      .then((rows) => {
-        response.status(200).send({ orderedArticles: rows });
+      .then((orderedArticles) => {
+        response.status(200).send({ orderedArticles });
       })
       .catch((err) => {
         next(err);
       });
   } else if (sort_by) {
     fetchArticles(sort_by)
-      .then((rows) => {
-        response.status(200).send({ sortedArticles: rows });
+      .then((sortedArticles) => {
+        response.status(200).send({ sortedArticles });
       })
       .catch((err) => {
         next(err);
       });
   } else if (topic) {
-    filterArticlesByTopic(topic).then((rows) => {
-      response.status(200).send({ articles: rows });
-    })
-    .catch((err) => next(err));
+    filterArticlesByTopic(topic)
+      .then((articles) => {
+        response.status(200).send({ articles });
+      })
+      .catch((err) => next(err));
   } else {
     fetchArticles()
-      .then(({ rows }) => {
-        response.status(200).send({ articles: rows });
+      .then((articles) => {
+        response.status(200).send({ articles });
       })
       .catch((err) => {
         next(err);

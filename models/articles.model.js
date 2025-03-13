@@ -7,33 +7,20 @@ exports.fetchArticles = (sortValue, orderValue) => {
   const orderDirection =
     orderValue && validOrderColumns.includes(orderValue) ? orderValue : "desc";
   let queryString = `SELECT * FROM articles `;
-  //if not an allowed input send an error
   if (sortValue && !validSortColumns.includes(sortValue)) {
     return Promise.reject({ status: 400, msg: "invalid sort by value" });
-  }
-  //if not allowed order value
-  else if (orderValue && !validOrderColumns.includes(orderValue)) {
+  } else if (orderValue && !validOrderColumns.includes(orderValue)) {
     return Promise.reject({ status: 400, msg: "invalid order value" });
-  }
-  //if /api/articles?sort_by=&order=
-  else if (sortValue && orderValue) {
+  } else if (sortValue && orderValue) {
     queryString += `ORDER BY ${sortValue} ${orderDirection.toUpperCase()}`;
-    return db.query(queryString).then(({ rows }) => {
-      return rows;
-    });
-  }
-  //if /api/articles?sort_by=
-  else if (sortValue) {
+  } else if (sortValue) {
     queryString += `ORDER BY ${sortValue} DESC`;
-    return db.query(queryString).then(({ rows }) => {
-      return rows;
-    });
-  }
-  //if /api/articles
-  else {
+  } else {
     queryString += `ORDER BY created_at DESC`;
-    return db.query(queryString);
   }
+  return db.query(queryString).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.filterArticlesByTopic = (topic) => {
