@@ -1,6 +1,6 @@
 # NC News
 
-Hosted version: <!-- add a link to the hosted version -->
+Hosted version: https://nc-news-be-yxc3.onrender.com/api
 
 ### Summary
 
