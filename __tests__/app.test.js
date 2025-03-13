@@ -96,8 +96,8 @@ describe("GET /api/articles?sort_by=", () => {
       .get("/api/articles?sort_by=created_at")
       .expect(200)
       .then(({ body }) => {
-        const { sortedArticles } = body;
-        expect(sortedArticles).toBeSortedBy("created_at", { descending: true });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
   test("200: responds with the articles sorted by votes descending", () => {
@@ -105,8 +105,8 @@ describe("GET /api/articles?sort_by=", () => {
       .get("/api/articles?sort_by=votes")
       .expect(200)
       .then(({ body }) => {
-        const { sortedArticles } = body;
-        expect(sortedArticles).toBeSortedBy("votes", { descending: true });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
       });
   });
   test("200: responds with the articles sorted by author descending", () => {
@@ -114,8 +114,8 @@ describe("GET /api/articles?sort_by=", () => {
       .get("/api/articles?sort_by=author")
       .expect(200)
       .then(({ body }) => {
-        const { sortedArticles } = body;
-        expect(sortedArticles).toBeSortedBy("author", { descending: true });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("author", { descending: true });
       });
   });
   test("200: responds with the articles sorted by topic descending", () => {
@@ -123,8 +123,8 @@ describe("GET /api/articles?sort_by=", () => {
       .get("/api/articles?sort_by=topic")
       .expect(200)
       .then(({ body }) => {
-        const { sortedArticles } = body;
-        expect(sortedArticles).toBeSortedBy("topic", { descending: true });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("topic", { descending: true });
       });
   });
   test("200: responds with the articles sorted by title descending", () => {
@@ -132,8 +132,8 @@ describe("GET /api/articles?sort_by=", () => {
       .get("/api/articles?sort_by=title")
       .expect(200)
       .then(({ body }) => {
-        const { sortedArticles } = body;
-        expect(sortedArticles).toBeSortedBy("title", { descending: true });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("title", { descending: true });
       });
   });
   test("200: responds with the articles sorted by created_at descending when no sort by key is given", () => {
@@ -168,8 +168,8 @@ describe("GET /api/articles?sort_by=&order=", () => {
       .get("/api/articles?sort_by=title&order=desc")
       .expect(200)
       .then(({ body }) => {
-        const { orderedArticles } = body;
-        expect(orderedArticles).toBeSortedBy("title", { descending: true });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("title", { descending: true });
       });
   });
   test("200: responds articles ordered ascending", () => {
@@ -177,8 +177,8 @@ describe("GET /api/articles?sort_by=&order=", () => {
       .get("/api/articles?sort_by=topic&order=asc")
       .expect(200)
       .then(({ body }) => {
-        const { orderedArticles } = body;
-        expect(orderedArticles).toBeSortedBy("topic", { descending: false });
+        const { articles } = body;
+        expect(articles).toBeSortedBy("topic", { descending: false });
       });
   });
   test("200: responds with articles sorted by created_at when sorted by is not specified but order is", () => {
@@ -186,8 +186,8 @@ describe("GET /api/articles?sort_by=&order=", () => {
       .get("/api/articles?sorted_by=&order=desc")
       .expect(200)
       .then(({ body }) => {
-        const { orderedArticles } = body;
-        expect(orderedArticles).toBeSortedBy("created_at", {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("created_at", {
           descending: true,
         });
       });
