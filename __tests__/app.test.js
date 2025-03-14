@@ -652,7 +652,14 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   }
   );
-  test.todo("404: responds with an error if the comment_id does not exist");
+  test("404: responds with an error if the comment_id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/7633")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("resource not found");
+      });
+  });
   test.todo("400: responds with an error if the comment_id is invalid");
 });
 
