@@ -12,5 +12,8 @@ exports.getUsersByUsername = (request, response, next) => {
   fetchUserByUsername(username)
     .then((user) => {
       response.status(200).send({ user });
+  })
+  .catch((err) => {
+    next(err)
   });
 };

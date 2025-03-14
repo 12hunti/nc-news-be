@@ -621,6 +621,14 @@ describe("GET /api/users/:username", () => {
       })
     })
   })
+  test("404: responds with an error if the username doesn't exist", () => {
+    return request(app)
+    .get("/api/users/notauser")
+    .expect(404)
+    .then(({body}) => {
+      expect(body.msg).toBe("username not found")
+    })
+  })
 })
 
 describe("invalid path request", () => {
