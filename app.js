@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const { apiRouter } = require("./routes/api-router");
 
-const { getUsers } = require("./controllers/users.controller");
 const {
   handlePsqlErrors,
   handleCustomErrors,
@@ -12,8 +11,6 @@ const {
 app.use(express.json());
 
 app.use("/api", apiRouter);
-
-app.get("/api/users", getUsers);
 
 app.all("*", (request, response) => {
   response.status(404).send({ msg: "path not found" });

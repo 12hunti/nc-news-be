@@ -21,4 +21,4 @@ articlesRouter.post("/:article_id/comments", postCommentsByArticleId);
 
 articlesRouter.patch("/:article_id", patchArticleById);
 
-module.exports = articlesRouter
+module.exports = articlesRouter;
