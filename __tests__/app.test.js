@@ -600,7 +600,6 @@ describe("PATCH /api/comments/:comment_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { updatedComment } = body;
-        console.log(body, "body in test")
         expect(updatedComment).toMatchObject({
           article_id: expect.any(Number),
           body: expect.any(String),
@@ -610,8 +609,25 @@ describe("PATCH /api/comments/:comment_id", () => {
         });
       });
   });
-  test.todo(
-    "200: responds with the comments object votes property updated when the votes are subtracted"
+  test(
+    "200: responds with the comments object votes property updated when the votes are subtracted", () => {
+      return request(app)
+      .patch("/api/comments/3")
+      .send({
+        inc_votes: -70,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedComment } = body;
+        expect(updatedComment).toMatchObject({
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          votes: 30,
+          author: expect.any(String),
+          created_at: expect.any(String),
+        });
+      });
+    }
   );
   test.todo(
     "400: responds with an error if sent an invalid value for the field"
