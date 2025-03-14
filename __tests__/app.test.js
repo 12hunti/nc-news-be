@@ -660,7 +660,14 @@ describe("PATCH /api/comments/:comment_id", () => {
         expect(body.msg).toBe("resource not found");
       });
   });
-  test.todo("400: responds with an error if the comment_id is invalid");
+  test("400: responds with an error if the comment_id is invalid", () => {
+    return request(app)
+      .delete("/api/comments/apple")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
 });
 
 describe("GET /api/users", () => {
