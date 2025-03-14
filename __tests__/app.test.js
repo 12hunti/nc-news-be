@@ -609,8 +609,7 @@ describe("PATCH /api/comments/:comment_id", () => {
         });
       });
   });
-  test(
-    "200: responds with the comments object votes property updated when the votes are subtracted", () => {
+  test("200: responds with the comments object votes property updated when the votes are subtracted", () => {
       return request(app)
       .patch("/api/comments/3")
       .send({
@@ -629,8 +628,17 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
     }
   );
-  test.todo(
-    "400: responds with an error if sent an invalid value for the field"
+  test("400: responds with an error if sent an invalid value for the field", () => {
+    return request(app)
+      .patch("/api/comments/4")
+      .send({
+        title: "new title",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  }
   );
   test.todo(
     "400: responds with an error if sent an invalid value for the votes"

@@ -78,9 +78,17 @@ exports.removeCommentsbyCommentId = (comment_id) => {
 
 exports.updateCommentByCommentId = (comment_id, commentData) => {
   const { inc_votes } = commentData;
-  
-  
-
+  const validFields = ["inc_votes"];
+  const receivedFields = Object.keys(commentData);
+  const invalidFields = receivedFields.filter(
+    (field) => !validFields.includes(field)
+  );
+  if (invalidFields.length > 0) {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+    });
+  }
   return checkExists("comments", "comment_id", comment_id).then(() => {
     return db
       .query(

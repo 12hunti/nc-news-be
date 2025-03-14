@@ -35,7 +35,9 @@ exports.patchCommentByCommentID = (request, response, next) => {
     .then((updatedComment) => {
       response.status(200).send({ updatedComment });
     })
-   
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.deleteCommentByCommentId = (request, response, next) => {
