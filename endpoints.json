@@ -173,7 +173,7 @@
   },
   "GET /api/articles?topic=":{
     "desciption" :"filters the articles by topic value",
-    "queries": [],
+    "queries": ["coding", "football", "cooking"],
     "exampleResponse":{
       "catArticles":[
         {
@@ -191,7 +191,7 @@
   },
   "GET /api/users":{
     "desciption": "serves an array of all of the users",
-    "queries":[],
+    "queries":["username"],
     "exampleResponse":{
       "user": [  {
         "username": "butter_bridge",
@@ -211,6 +211,20 @@
         "avatar_url":
           "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
       }]
+    }
+  },
+  "PATCH /api/comments/:comment_id":{
+    "desciption": "updates the votes on a comment by the comment_id",
+    "queries":[],
+    "exampleResponse": {
+      "comment": [{
+          "article_title": "Living in the shadow of a great man",
+          "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+          "votes": 20,
+          "author": "butter_bridge",
+          "created_at": 1604113380000
+        }
+      ]
     }
   }
 }

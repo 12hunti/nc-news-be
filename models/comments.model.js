@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { commentData } = require("../db/data/test-data");
 const { checkExists } = require("../db/seeds/utils");
 
 exports.fetchCommentsByArticleId = (article_id) => {
@@ -73,4 +74,29 @@ exports.removeCommentsbyCommentId = (comment_id) => {
     .then(({ rows }) => {
       return rows;
     });
+};
+
+exports.updateCommentByCommentId = (comment_id, commentData) => {
+  const { inc_votes } = commentData;
+  const validFields = ["inc_votes"];
+  const receivedFields = Object.keys(commentData);
+  const invalidFields = receivedFields.filter(
+    (field) => !validFields.includes(field)
+  );
+  if (invalidFields.length > 0) {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+    });
+  }
+  return checkExists("comments", "comment_id", comment_id).then(() => {
+    return db
+      .query(
+        `UPDATE comments SET votes = votes + $1 WHERE comment_id = $2 RETURNING *;`,
+        [inc_votes, comment_id]
+      )
+      .then(({ rows }) => {
+        return rows[0];
+      });
+  });
 };
