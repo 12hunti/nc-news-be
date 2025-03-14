@@ -640,8 +640,17 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   }
   );
-  test.todo(
-    "400: responds with an error if sent an invalid value for the votes"
+  test("400: responds with an error if sent an invalid value for the votes", () => {
+    return request(app)
+      .patch("/api/comments/6")
+      .send({
+        votes: ["add 15 votes"],
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  }
   );
   test.todo("404: responds with an error if the comment_id does not exist");
   test.todo("400: responds with an error if the comment_id is invalid");
