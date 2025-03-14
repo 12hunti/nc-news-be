@@ -3,13 +3,6 @@ const app = express();
 const { apiRouter } = require("./routes/api-router");
 
 const {
-  getArticles,
-  getArticleById,
-  patchArticleById,
-} = require("./controllers/articles.controller");
-const {
-  getCommentsByArticleId,
-  postCommentsByArticleId,
   deleteCommentByCommentId,
 } = require("./controllers/comments.controller");
 const { getUsers } = require("./controllers/users.controller");
@@ -22,16 +15,6 @@ const {
 app.use(express.json());
 
 app.use("/api", apiRouter);
-
-app.get("/api/articles", getArticles);
-
-app.get("/api/articles/:article_id", getArticleById);
-
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-
-app.post("/api/articles/:article_id/comments", postCommentsByArticleId);
-
-app.patch("/api/articles/:article_id", patchArticleById);
 
 app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
