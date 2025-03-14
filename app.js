@@ -2,9 +2,6 @@ const express = require("express");
 const app = express();
 const { apiRouter } = require("./routes/api-router");
 
-const {
-  deleteCommentByCommentId,
-} = require("./controllers/comments.controller");
 const { getUsers } = require("./controllers/users.controller");
 const {
   handlePsqlErrors,
@@ -15,8 +12,6 @@ const {
 app.use(express.json());
 
 app.use("/api", apiRouter);
-
-app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 app.get("/api/users", getUsers);
 
