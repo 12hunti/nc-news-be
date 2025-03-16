@@ -590,6 +590,86 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: responds with the comment object votes property updated when votes are added", () => {
+    return request(app)
+      .patch("/api/comments/3")
+      .send({
+        inc_votes: 30,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedComment } = body;
+        expect(updatedComment).toMatchObject({
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          votes: 130,
+          author: expect.any(String),
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("200: responds with the comments object votes property updated when the votes are subtracted", () => {
+      return request(app)
+      .patch("/api/comments/3")
+      .send({
+        inc_votes: -70,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedComment } = body;
+        expect(updatedComment).toMatchObject({
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          votes: 30,
+          author: expect.any(String),
+          created_at: expect.any(String),
+        });
+      });
+    }
+  );
+  test("400: responds with an error if sent an invalid value for the field", () => {
+    return request(app)
+      .patch("/api/comments/4")
+      .send({
+        title: "new title",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  }
+  );
+  test("400: responds with an error if sent an invalid value for the votes", () => {
+    return request(app)
+      .patch("/api/comments/6")
+      .send({
+        votes: ["add 15 votes"],
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  }
+  );
+  test("404: responds with an error if the comment_id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/7633")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("resource not found");
+      });
+  });
+  test("400: responds with an error if the comment_id is invalid", () => {
+    return request(app)
+      .delete("/api/comments/apple")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("bad request");
+      });
+  });
+});
+
 describe("GET /api/users", () => {
   test("200: responds with the users object with with user containing the correct properties", () => {
     return request(app)
@@ -610,26 +690,26 @@ describe("GET /api/users", () => {
 describe("GET /api/users/:username", () => {
   test("200: responds with the user from the requested username", () => {
     return request(app)
-    .get("/api/users/butter_bridge")
-    .expect(200)
-    .then(({body}) => {
-      const {user} = body
-      expect(user).toMatchObject({
-        username: "butter_bridge",
-        avatar_url: expect.any(String),
-        name: expect.any(String)
-      })
-    })
-  })
+      .get("/api/users/butter_bridge")
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body;
+        expect(user).toMatchObject({
+          username: "butter_bridge",
+          avatar_url: expect.any(String),
+          name: expect.any(String),
+        });
+      });
+  });
   test("404: responds with an error if the username doesn't exist", () => {
     return request(app)
-    .get("/api/users/notauser")
-    .expect(404)
-    .then(({body}) => {
-      expect(body.msg).toBe("username not found")
-    })
-  })
-})
+      .get("/api/users/notauser")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("username not found");
+      });
+  });
+});
 
 describe("invalid path request", () => {
   test("404: responds with an error if the path does not exist", () => {
