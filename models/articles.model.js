@@ -8,7 +8,7 @@ exports.fetchArticles = (
 ) => {
   const validSortColumns = ["created_at", "votes", "author", "topic", "title"];
   const validOrderColumns = ["asc", "desc"];
-  const validTopicColumns = ["mitch", "cats", "paper"]; //football, cooking and coding for dev data
+  const validTopicColumns = ["mitch", "cats", "paper", "football", "cooking", "coding"]; //football, cooking and coding for dev data
   const orderDirection = order || "desc";
   let queryString = "SELECT * FROM articles";
   if (!validSortColumns.includes(sortBy)) {
