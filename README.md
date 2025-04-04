@@ -1,6 +1,8 @@
-# NC News
+# NC News Back End
 
 Hosted version: https://nc-news-be-3xer.onrender.com/api
+
+NC News Front End: https://github.com/12hunti/nc-news-fe
 
 ### Summary
 
